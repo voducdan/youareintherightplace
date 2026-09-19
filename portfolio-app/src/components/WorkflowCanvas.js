@@ -644,27 +644,63 @@ export class WorkflowCanvas {
   }
 
   /**
-   * Execution order by true topological sort. Used by both the arrival reveal and
-   * the run sequence, so a node never resolves before the nodes it depends on.
+   * Execution order: a topological sort that breaks ties by start date, oldest
+   * first, so the run replays the career forwards — ACB, FPT, Amanotes, MoMo,
+   * Convincely — and each role's projects follow the role they belong to.
+   *
+   * Dependency order still wins: every role hangs off the degree, so without a
+   * tie-break the five roles came out in data order, which is newest first.
    */
   getExecutionOrder() {
-    const order = []
-    const visited = new Set()
-    const visiting = new Set()
-    const deps = new Map()
+    const unmet = new Map()
+    const dependents = new Map()
+    const rank = new Map()
 
-    this.tasks.forEach((d, id) => deps.set(id, (d.task.dependencies || []).filter(x => this.tasks.has(x))))
+    let i = 0
+    this.tasks.forEach((d, id) => {
+      unmet.set(id, new Set((d.task.dependencies || []).filter(x => this.tasks.has(x))))
+      // Undated nodes (skills, certificates, the trigger) sort last among whatever
+      // is ready, so they settle once the dated run has moved past them.
+      rank.set(id, { start: d.task.start || '9999-99', seq: i++ })
+    })
 
-    const visit = id => {
-      if (visited.has(id) || visiting.has(id)) return
-      visiting.add(id)
-      ;(deps.get(id) || []).forEach(visit)
-      visiting.delete(id)
-      visited.add(id)
-      order.push(id)
+    unmet.forEach((deps, id) => {
+      deps.forEach(dep => {
+        if (!dependents.has(dep)) dependents.set(dep, [])
+        dependents.get(dep).push(id)
+      })
+    })
+
+    const earliest = (a, b) => {
+      const ra = rank.get(a)
+      const rb = rank.get(b)
+      return ra.start === rb.start ? ra.seq - rb.seq : ra.start < rb.start ? -1 : 1
     }
 
-    this.tasks.forEach((_, id) => visit(id))
+    const ready = []
+    unmet.forEach((deps, id) => {
+      if (deps.size === 0) ready.push(id)
+    })
+
+    const order = []
+    while (ready.length) {
+      ready.sort(earliest)
+      const id = ready.shift()
+      order.push(id)
+      ;(dependents.get(id) || []).forEach(next => {
+        const deps = unmet.get(next)
+        deps.delete(id)
+        if (deps.size === 0) ready.push(next)
+      })
+    }
+
+    // A dependency cycle would strand nodes; append them so nothing is dropped.
+    if (order.length < this.tasks.size) {
+      this.tasks.forEach((_, id) => {
+        if (!order.includes(id)) order.push(id)
+      })
+    }
+
     return order
   }
 

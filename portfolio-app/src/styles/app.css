@@ -386,7 +386,7 @@ body {
   padding: 10px 13px 11px 12px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--state-pending-solid);
+  border-left: 6px solid var(--state-pending-solid);
   border-radius: 9px;
   box-shadow: var(--shadow-2);
   font-family: var(--ff-display);
@@ -927,7 +927,7 @@ body {
   padding: 13px 15px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--state-pending-solid);
+  border-left: 6px solid var(--state-pending-solid);
   border-radius: 9px;
   box-shadow: var(--shadow-1);
 }
