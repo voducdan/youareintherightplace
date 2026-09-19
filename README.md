@@ -4,7 +4,7 @@ This repository contains a spec-driven development framework and Dan Vo's intera
 
 ## 🚀 Live Demo
 
-**Portfolio Website**: [View Live Demo](https://voducdan.github.io/spec-driven/portfolio-app/)
+**Portfolio Website**: [View Live Demo](https://voducdan.github.io/youareintherightplace/)
 
 ## 📁 Repository Structure
 
@@ -128,14 +128,6 @@ The portfolio is automatically deployed to GitHub Pages using GitHub Actions:
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
-
-## 📞 Contact
-
-**Dan Vo**
-- Email: voducdand99@gmail.com
-- Phone: 0972184325
-- Location: Ho Chi Minh City, Vietnam
-- Portfolio: [Live Demo](https://voducdan.github.io/spec-driven/portfolio-app/)
 
 ---
 

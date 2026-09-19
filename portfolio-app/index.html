@@ -4,129 +4,112 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dan Vo - Data Engineer Portfolio | Airflow DAG</title>
+    <meta name="color-scheme" content="light dark" />
+    <title>Vo Duc Dan — Senior Data Engineer</title>
     <meta
       name="description"
-      content="Interactive portfolio showcasing Dan Vo's data engineering experience through Apache Airflow DAG visualization"
+      content="Portfolio of Vo Duc Dan, Senior Data Engineer: ClickHouse, Airflow, Spark and dbt work rendered as an Airflow DAG."
     />
 
-    <!-- Airflow-inspired SVG definitions -->
-    <svg style="display: none">
-      <defs>
-        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#017CEE" />
-        </marker>
-      </defs>
-    </svg>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    />
+
+    <style>
+      /* Boot styles only — the app's own tokens take over once main.js loads. */
+      :root {
+        --boot-bg: #f0f3f6;
+        --boot-fg: #5f6b78;
+        --boot-accent: #016ed4;
+        --boot-line: #d3dbe3;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --boot-bg: #0d1117;
+          --boot-fg: #8b98a6;
+          --boot-accent: #148dfe;
+          --boot-line: #2a3540;
+        }
+      }
+
+      :root[data-theme='dark'] {
+        --boot-bg: #0d1117;
+        --boot-fg: #8b98a6;
+        --boot-accent: #148dfe;
+        --boot-line: #2a3540;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--boot-bg);
+      }
+
+      .loading-screen {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: var(--boot-bg);
+        z-index: 9999;
+      }
+
+      .loading-content {
+        display: grid;
+        gap: 14px;
+        justify-items: center;
+        font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--boot-fg);
+      }
+
+      .loading-bar {
+        width: 160px;
+        height: 2px;
+        background: var(--boot-line);
+        overflow: hidden;
+      }
+
+      .loading-progress {
+        width: 40%;
+        height: 100%;
+        background: var(--boot-accent);
+        animation: loading 1.4s ease-in-out infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(350%);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .loading-progress {
+          animation: none;
+          width: 100%;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="app">
-      <!-- Application will be rendered here -->
       <div class="loading-screen">
         <div class="loading-content">
-          <div class="airflow-logo">⚡</div>
-          <h2>Initializing Portfolio DAG...</h2>
-          <div class="loading-bar">
-            <div class="loading-progress"></div>
-          </div>
+          <span>Parsing DAG</span>
+          <div class="loading-bar"><div class="loading-progress"></div></div>
         </div>
       </div>
     </div>
     <script type="module" src="/src/main.js"></script>
-    
-    <!-- Fallback script to remove loading screen if JavaScript fails -->
-    <script>
-      // Emergency fallback to remove loading screen after 10 seconds
-      setTimeout(function() {
-        var loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-          console.log('🚨 Emergency removal of loading screen after 10 seconds');
-          loadingScreen.style.display = 'none';
-          if (loadingScreen.parentNode) {
-            loadingScreen.parentNode.removeChild(loadingScreen);
-          }
-        }
-      }, 10000);
-      
-      // Also try to catch any unhandled errors
-      window.addEventListener('error', function(e) {
-        console.error('🚨 Global error caught:', e.error);
-        var loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-          loadingScreen.style.display = 'none';
-          if (loadingScreen.parentNode) {
-            loadingScreen.parentNode.removeChild(loadingScreen);
-          }
-          
-          // Show error message
-          var errorDiv = document.createElement('div');
-          errorDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10000; max-width: 500px; text-align: center;';
-          errorDiv.innerHTML = '<h3 style="color: #dc2626; margin-top: 0;">Portfolio Loading Error</h3><p>There was a JavaScript error. Please check the console and refresh the page.</p><button onclick="location.reload()" style="background: #017cee; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Reload Page</button>';
-          document.body.appendChild(errorDiv);
-        }
-      });
-    </script>
-
-    <style>
-      .loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #017cee 0%, #1e3a8a 100%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        color: white;
-      }
-
-      .loading-content {
-        text-align: center;
-      }
-
-      .airflow-logo {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        animation: rotate 2s linear infinite;
-      }
-
-      .loading-bar {
-        width: 200px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 2px;
-        overflow: hidden;
-        margin-top: 1rem;
-      }
-
-      .loading-progress {
-        width: 100%;
-        height: 100%;
-        background: white;
-        transform: translateX(-100%);
-        animation: loading 2s ease-in-out infinite;
-      }
-
-      @keyframes rotate {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes loading {
-        0%,
-        100% {
-          transform: translateX(-100%);
-        }
-        50% {
-          transform: translateX(0%);
-        }
-      }
-    </style>
   </body>
 </html>

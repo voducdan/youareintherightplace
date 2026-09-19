@@ -6,8 +6,8 @@ describe('Portfolio Data Integration', () => {
   describe('Data Structure Validation', () => {
     it('should have valid personal information', () => {
       expect(portfolioData.personal).toBeDefined()
-      expect(portfolioData.personal.name).toBe('Dan Vo')
-      expect(portfolioData.personal.title).toBe('Data Engineer')
+      expect(portfolioData.personal.name).toBe('Vo Duc Dan')
+      expect(portfolioData.personal.title).toBe('Senior Data Engineer')
       expect(portfolioData.personal.email).toMatch(/^.+@.+\..+$/) // Basic email format
       expect(portfolioData.personal.summary).toBeTruthy()
     })

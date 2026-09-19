@@ -1,0 +1,227 @@
+/* Design tokens — the single source for colour and motion.
+   Light is defined on :root, dark is redefined in two places so that an explicit
+   choice wins over the OS setting in both directions.
+
+   Palette: Apache Airflow's default task state colours, plus the Airflow brand
+   blue #017CEE as the accent.
+     success #2ECC40   running #01FF70   failed firebrick #B22222
+     queued darkgray #A9A9A9
+
+   Stages borrow the Airflow state colours this page has no state for, so every
+   colour still comes from one documented source:
+     education mediumpurple #9370DB   experience #017CEE
+     projects turquoise #40E0D0       skills orange #FFA500
+     certifications darkorchid #9932CC
+
+   Stripes, dots and legend keys keep Airflow's literals. Text-level colours are
+   shades of the same hue, pushed only as far as contrast required.
+
+   One deliberate compromise: Airflow's success and running are both green, and
+   on a white ground the lime running literal is 1.4:1 — invisible as a stripe.
+   The running card therefore carries a tinted fill and a deepened-lime border,
+   so the state never rests on the stripe alone. The two greens are only ever
+   adjacent in the legend and the toolbar, where both use the literals.
+*/
+
+:root {
+  --paper: #f0f3f6;
+  --surface: #ffffff;
+  --surface-2: #e6ebf0;
+  --surface-3: #d5dde5;
+
+  --ink: #1b2530;
+  --ink-2: #3c4a57;
+  --muted: #5f6b78;
+
+  --line: #d3dbe3;
+  --line-soft: #e6ebf0;
+
+  --accent: #016ed4;
+  --accent-ink: #0158a9;
+  --accent-bg: #e6f2fd;
+
+  --state-success: #1d7f28;
+  --state-running: #007f38;
+  --state-failed: #b22222;  /* airflow failed */
+  --state-pending: #6f6f6f;
+
+  --state-success-solid: #2ecc40;  /* airflow success */
+  --state-running-solid: #01ff70;  /* airflow running */
+  --state-failed-solid: #b22222;  /* airflow failed */
+  --state-pending-solid: #949494;
+
+  --state-success-bg: #e6f9e8;
+  --state-running-bg: #dbffeb;
+  --state-running-surface: #e1ffee;
+  --state-running-border: #00a649;
+  --state-failed-bg: #f6e4e4;
+  --state-pending-bg: #f4f4f4;  /* tint, for chip contrast */
+
+  --lane-education: #7f56d4;
+  --lane-experience: #016ed4;
+  --lane-projects: #147b71;
+  --lane-skills: #996300;
+  --lane-certs: #9932cc;  /* airflow skipped */
+
+  --lane-education-solid: #9370db;  /* airflow deferred */
+  --lane-experience-solid: #017cee;  /* airflow Airflow brand blue */
+  --lane-projects-solid: #1cab9c;  /* shade of airflow turquoise, to read on a light canvas */
+  --lane-skills-solid: #d48900;  /* shade of airflow orange, to read on a light canvas */
+  --lane-certs-solid: #9932cc;  /* airflow skipped */
+
+  --highlight: #cce5fc;
+
+  --canvas-bg: #edf1f5;
+  --canvas-dot: #d4dce4;
+  --edge: #aab6c2;
+
+  --shadow-1: 0 1px 2px rgba(27, 37, 48, 0.06);
+  --shadow-2: 0 1px 2px rgba(27, 37, 48, 0.06), 0 8px 24px -16px rgba(27, 37, 48, 0.32);
+  --shadow-3: 0 2px 6px rgba(27, 37, 48, 0.09), 0 18px 44px -22px rgba(27, 37, 48, 0.45);
+  --edge-lit: var(--accent);
+
+  /* type */
+  --ff-display: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ff-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --ff-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* motion — every duration on the page resolves here */
+  --motion-fast: 140ms;
+  --motion-mid: 260ms;
+  --motion-slow: 420ms;
+  --motion-edge: 520ms;
+  --motion-stagger: 60ms;
+  --motion-hop: 280ms;
+  --motion-running: 1100ms;
+  --motion-flow: 2600ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.2, 0, 0, 1);
+  --ease-draw: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #0d1117;
+    --surface: #151c24;
+    --surface-2: #1e2731;
+    --surface-3: #29343f;
+
+    --ink: #e8edf2;
+    --ink-2: #c2ccd6;
+    --muted: #8b98a6;
+
+    --line: #2a3540;
+    --line-soft: #1c242d;
+
+    --accent: #148dfe;
+    --accent-ink: #69b7fe;
+    --accent-bg: #0b2642;
+
+    --state-success: #2ecc40;  /* airflow success */
+    --state-running: #01ff70;  /* airflow running */
+    --state-failed: #e26565;
+    --state-pending: #a9a9a9;  /* airflow queued */
+
+    --state-success-solid: #2ecc40;  /* airflow success */
+    --state-running-solid: #01ff70;  /* airflow running */
+    --state-failed-solid: #c52626;  /* tint of airflow firebrick, for a dark card */
+    --state-pending-solid: #a9a9a9;  /* airflow queued */
+
+    --state-success-bg: #122f1e;
+    --state-running-bg: #0b3223;
+    --state-running-surface: #16231d;
+    --state-running-border: #01ff70;  /* airflow running */
+    --state-failed-bg: #2e1419;
+    --state-pending-bg: #23262b;
+
+    --lane-education: #9c7bde;
+    --lane-experience: #148dfe;
+    --lane-projects: #40e0d0;  /* airflow reschedule */
+    --lane-skills: #ffa500;  /* airflow upstream_failed */
+    --lane-certs: #b76edb;
+
+    --lane-education-solid: #9370db;  /* airflow deferred */
+    --lane-experience-solid: #017cee;  /* airflow Airflow brand blue */
+    --lane-projects-solid: #40e0d0;  /* airflow reschedule */
+    --lane-skills-solid: #ffa500;  /* airflow upstream_failed */
+    --lane-certs-solid: #9932cc;  /* airflow skipped */
+
+    --highlight: #0a2d4f;
+
+    --canvas-bg: #0a0e13;
+    --canvas-dot: #1b232b;
+    --edge: #3a4653;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
+    --shadow-3: 0 2px 8px rgba(0, 0, 0, 0.55), 0 20px 48px -24px rgba(0, 0, 0, 0.95);
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #0d1117;
+  --surface: #151c24;
+  --surface-2: #1e2731;
+  --surface-3: #29343f;
+
+  --ink: #e8edf2;
+  --ink-2: #c2ccd6;
+  --muted: #8b98a6;
+
+  --line: #2a3540;
+  --line-soft: #1c242d;
+
+  --accent: #148dfe;
+  --accent-ink: #69b7fe;
+  --accent-bg: #0b2642;
+
+  --state-success: #2ecc40;  /* airflow success */
+  --state-running: #01ff70;  /* airflow running */
+  --state-failed: #e26565;
+  --state-pending: #a9a9a9;  /* airflow queued */
+
+  --state-success-solid: #2ecc40;  /* airflow success */
+  --state-running-solid: #01ff70;  /* airflow running */
+  --state-failed-solid: #c52626;  /* tint of airflow firebrick, for a dark card */
+  --state-pending-solid: #a9a9a9;  /* airflow queued */
+
+  --state-success-bg: #122f1e;
+  --state-running-bg: #0b3223;
+  --state-running-surface: #16231d;
+  --state-running-border: #01ff70;  /* airflow running */
+  --state-failed-bg: #2e1419;
+  --state-pending-bg: #23262b;
+
+  --lane-education: #9c7bde;
+  --lane-experience: #148dfe;
+  --lane-projects: #40e0d0;  /* airflow reschedule */
+  --lane-skills: #ffa500;  /* airflow upstream_failed */
+  --lane-certs: #b76edb;
+
+  --lane-education-solid: #9370db;  /* airflow deferred */
+  --lane-experience-solid: #017cee;  /* airflow Airflow brand blue */
+  --lane-projects-solid: #40e0d0;  /* airflow reschedule */
+  --lane-skills-solid: #ffa500;  /* airflow upstream_failed */
+  --lane-certs-solid: #9932cc;  /* airflow skipped */
+
+  --highlight: #0a2d4f;
+
+  --canvas-bg: #0a0e13;
+  --canvas-dot: #1b232b;
+  --edge: #3a4653;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
+  --shadow-3: 0 2px 8px rgba(0, 0, 0, 0.55), 0 20px 48px -24px rgba(0, 0, 0, 0.95);
+}
+
+/* The JS animations check this too — see prefersReducedMotion() in WorkflowCanvas. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 1ms;
+    --motion-mid: 1ms;
+    --motion-slow: 1ms;
+    --motion-edge: 1ms;
+    --motion-stagger: 0ms;
+  }
+}

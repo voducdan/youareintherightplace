@@ -41,6 +41,7 @@ export class TaskGroup {
     const group = document.createElement('div')
     group.className = `task-group ${this.isExpanded ? 'expanded' : 'collapsed'}`
     group.id = `group-${this.id}`
+    if (this.lane) group.dataset.lane = this.lane
     
     // Remove left/top positioning. Position will be set by transform.
     group.style.position = 'absolute';
@@ -51,17 +52,12 @@ export class TaskGroup {
     group.style.width = `${width}px`
     group.style.height = `${height}px`
     group.style.transformOrigin = 'top left'
-    group.style.transition = `all ${this.animationDuration}ms cubic-bezier(0.4, 0, 0.2, 1)`
 
-    const header = document.createElement('div')
-    header.className = 'group-header'
-    header.innerHTML = `
-      <div class="group-info">
-        <span class="group-title">${this.title}</span>
-      </div>
-    `
+    const label = document.createElement('span')
+    label.className = 'group-label'
+    label.textContent = this.title
 
-    group.appendChild(header)
+    group.appendChild(label)
 
     this.element = group
     return group
