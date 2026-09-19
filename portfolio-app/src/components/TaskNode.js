@@ -1,23 +1,59 @@
-// Airflow-inspired Task Node Component with Enhanced Interactivity
-import { portfolioData } from '../data/portfolio-data.js'
+// Airflow-inspired task node.
+// The card is designed to be readable without opening it: org, period, title,
+// one quantified outcome, and the stack. Status lives in the left stripe, so the
+// word "Completed" no longer repeats on every node.
+import { portfolioData, portfolioHelpers } from '../data/portfolio-data.js'
+
+// Inline SVG icon set, 16x16, stroked with currentColor so it inherits theme and weight.
+const ICONS = {
+  start: '<path d="M4 2.5v11l9-5.5-9-5.5z"/>',
+  education: '<path d="M8 2 1.5 5.5 8 9l6.5-3.5L8 2Z"/><path d="M4 7.2v3.6c0 .8 1.8 1.7 4 1.7s4-.9 4-1.7V7.2"/>',
+  experience:
+    '<rect x="1.8" y="4.6" width="12.4" height="8.6" rx="1.4"/><path d="M5.6 4.6V3.4c0-.7.5-1.2 1.2-1.2h2.4c.7 0 1.2.5 1.2 1.2v1.2"/>',
+  projects: '<path d="M8 1.8 3 4.4v5.2L8 12.2l5-2.6V4.4L8 1.8Z"/><path d="M3 4.4 8 7l5-2.6M8 7v5.2"/>',
+  skills: '<path d="M4.6 5.4 1.8 8l2.8 2.6M11.4 5.4 14.2 8l-2.8 2.6M9.4 3.2 6.6 12.8"/>',
+  certifications: '<circle cx="8" cy="6.2" r="4"/><path d="M5.6 9.6 4.8 14 8 12.4 11.2 14l-.8-4.4"/>',
+  group: '<rect x="2" y="2.6" width="12" height="10.8" rx="1.6"/>',
+}
+
+function icon(type) {
+  const body = ICONS[type] || ICONS.group
+  return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(
+    /[&<>"']/g,
+    ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]
+  )
+}
+
+const STATUS_TEXT = {
+  pending: 'Queued',
+  running: 'Running',
+  success: 'Success',
+  failed: 'Failed',
+}
 
 export class TaskNode {
   constructor(id, title, type, status = 'pending', description = '', position = { x: 0, y: 0 }, details = null) {
     this.id = id
     this.title = title
-    this.type = type // 'education', 'experience', 'skills', 'projects', 'certifications'
-    this.status = status // 'pending', 'running', 'success', 'failed'
+    this.type = type
+    this.status = status
     this.description = description
-    this.position = position
-    this.details = details // New property for detailed information
+    this.position = { x: position.x, y: position.y }
+    this.details = details
     this.dependencies = []
     this.element = null
-    this.isExpanded = false
-    this.animationDuration = 300
-    
-    // Transform properties
+
+    // Card metadata, populated by WorkflowCanvas from the DAG data.
+    this.org = ''
+    this.period = ''
+    this.metric = ''
+    this.tags = []
+
     this.scale = 1
-    this.hoverScale = 1
   }
 
   addDependency(taskId) {
@@ -25,251 +61,105 @@ export class TaskNode {
   }
 
   updatePosition(x, y) {
-    this.position.x = x;
-    this.position.y = y;
-    this.applyTransform();
+    this.position.x = x
+    this.position.y = y
+    this.applyTransform()
   }
 
   render(x = this.position.x, y = this.position.y) {
-    const node = document.createElement('div');
-    node.className = `task-node task-${this.type} status-${this.status}`;
-    node.id = `task-${this.id}`;
-    node.dataset.id = this.id; // Add data-id for easier selection
-    
-    // Position is handled by transform. Set base position at 0,0.
-    node.style.position = 'absolute';
-    node.style.left = '0px';
-    node.style.top = '0px';
-    
-    this.element = node;
-    
-    // Set initial position
-    this.position.x = x;
-    this.position.y = y;
+    const node = document.createElement('div')
+    node.className = `task-node task-${this.type} status-${this.status}`
+    node.id = `task-${this.id}`
+    node.dataset.id = this.id
+    node.tabIndex = 0
+    node.setAttribute('role', 'button')
+    node.setAttribute('aria-label', `${this.title}${this.org ? `, ${this.org}` : ''}. ${this.getStatusText()}.`)
 
-    node.style.transformOrigin = 'top left';
-    node.style.transition = `transform 0.1s ease-out`;
+    this.element = node
+    this.position.x = x
+    this.position.y = y
 
     node.innerHTML = `
-      <div class="task-header">
-        <span class="task-icon">${this.getIcon()}</span>
-        <span class="task-title">${this.title}</span>
+      <div class="node-top">
+        <span class="node-org">${icon(this.type)}<span>${escapeHtml(this.org || this.type)}</span></span>
+        ${this.period ? `<span class="node-period">${escapeHtml(this.period)}</span>` : ''}
       </div>
-      <div class="task-status">
-        <span class="status-indicator"></span>
-        <span class="status-text">${this.getStatusText()}</span>
-      </div>
-    `;
+      <span class="node-title">${escapeHtml(this.title)}</span>
+      ${this.metric ? `<span class="node-metric">${escapeHtml(this.metric)}</span>` : ''}
+      ${
+        this.tags && this.tags.length
+          ? `<div class="node-tags">${this.tags.map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>`
+          : ''
+      }
+    `
 
-    // Add event listeners
-    this.addEventListeners(node);
-    
-    this.element = node;
-    
-    // Apply initial transform
-    this.applyTransform();
-    
-    return node;
-  }
-
-  addEventListeners(node) {
-    // Main click handler for showing the modal
-    node.addEventListener('click', (e) => {
-      // e.stopPropagation();
-      this.showDetailedView();
-    });
-
-    // Hover effects
-    node.addEventListener('mouseenter', () => this.onHover());
-    node.addEventListener('mouseleave', () => this.onHoverEnd());
+    this.applyTransform()
+    return node
   }
 
   getIcon() {
-    const icons = {
-      education: '🎓',
-      experience: '💼',
-      skills: '⚡',
-      projects: '🚀',
-      certifications: '🏆'
-    }
-    return icons[this.type] || '📋'
+    return icon(this.type)
   }
 
   getStatusText() {
-    const statusTexts = {
-      pending: 'Pending',
-      running: 'In Progress',
-      success: 'Completed',
-      failed: 'Failed'
-    }
-    return statusTexts[this.status] || this.status
+    return STATUS_TEXT[this.status] || this.status
   }
 
+  /**
+   * Full detail for the side panel. Pulls the real CV record when the DAG node
+   * references one, so the panel and the data file never drift apart.
+   */
   renderDetails() {
-    if (!this.details) return '<p>No details available for this task.</p>';
+    const d = this.details || {}
 
-    let detailsHtml = `<h1>${this.title}</h1>`;
+    if (d.ref) {
+      const exp = portfolioHelpers.getExperienceById(d.ref)
+      if (exp) return this.renderExperience(exp)
 
-    if (this.details) {
-      detailsHtml += '<h2>Details:</h2>';
-      for (const [key, value] of Object.entries(this.details)) {
-        if (Array.isArray(value)) {
-          detailsHtml += `<h3>${key.charAt(0).toUpperCase() + key.slice(1)}:</h3><ul>`;
-          value.forEach(item => {
-            detailsHtml += `<li>${item}</li>`;
-          });
-          detailsHtml += '</ul>';
-        } else if (typeof value === 'object' && value !== null) {
-          detailsHtml += `<h3>${key.charAt(0).toUpperCase() + key.slice(1)}:</h3>`;
-          for (const [subKey, subValue] of Object.entries(value)) {
-            detailsHtml += `<p><strong>${subKey}:</strong> ${subValue}</p>`;
-          }
-        } else {
-          detailsHtml += `<p><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value}</p>`;
-        }
-      }
+      const proj = portfolioHelpers.getProjectById(d.ref)
+      if (proj) return this.renderProject(proj)
     }
-    
-    return detailsHtml;
-  }
 
-  renderEducationDetails(education) {
-    return education.map(edu => `
-      <div class="detail-item">
-        <h4>${edu.institution}</h4>
-        <p><strong>${edu.degree}</strong> in ${edu.field}</p>
-        <p><em>${edu.year}</em> | GPA: ${edu.gpa || 'N/A'}</p>
-      </div>
-    `).join('')
-  }
-
-  renderExperienceDetails(experience) {
-    return experience.slice(0, 2).map(exp => `
-      <div class="detail-item">
-        <h4>${exp.company}</h4>
-        <p><strong>${exp.position}</strong></p>
-        <p><em>${exp.duration}</em></p>
-        <p class="tech-stack">${exp.technologies.slice(0, 3).join(', ')}${exp.technologies.length > 3 ? '...' : ''}</p>
-      </div>
-    `).join('')
-  }
-
-  renderSkillsDetails(skills) {
-    return Object.entries(skills).slice(0, 3).map(([key, skill]) => `
-      <div class="detail-item">
-        <h4>${skill.category}</h4>
-        <div class="skill-bar">
-          <div class="skill-progress" style="width: ${skill.proficiency}%"></div>
-        </div>
-        <p class="skill-items">${skill.items.slice(0, 3).join(', ')}${skill.items.length > 3 ? '...' : ''}</p>
-      </div>
-    `).join('')
-  }
-
-  renderProjectsDetails(projects) {
-    return projects.slice(0, 2).map(project => `
-      <div class="detail-item">
-        <h4>${project.title}</h4>
-        <p>${project.description.substring(0, 100)}${project.description.length > 100 ? '...' : ''}</p>
-        <p class="tech-stack">${project.technologies.slice(0, 3).join(', ')}</p>
-      </div>
-    `).join('')
-  }
-
-  renderCertificationsDetails(certifications) {
-    return certifications.map(cert => `
-      <div class="detail-item">
-        <h4>${cert.name}</h4>
-        <p><strong>${cert.issuer}</strong></p>
-        <p><em>${cert.year}</em></p>
-      </div>
-    `).join('')
-  }
-
-  getPortfolioData() {
-    switch (this.type) {
-      case 'education':
-        return portfolioData.education
-      case 'experience':
-        return portfolioData.experience
-      case 'skills':
-        return portfolioData.skills
-      case 'projects':
-        return portfolioData.projects
-      case 'certifications':
-        return portfolioData.certifications
-      default:
-        return null
+    if (d.skillRef && portfolioData.skills[d.skillRef]) {
+      return this.renderSkill(portfolioData.skills[d.skillRef])
     }
+
+    return this.renderGeneric(d)
   }
 
-  toggleExpand() {
-    this.isExpanded = !this.isExpanded
-    
-    if (!this.element) return
-    
-    const details = this.element.querySelector('.task-details')
-    const expandBtn = this.element.querySelector('.task-expand-btn')
-    
-    if (details) {
-      if (this.isExpanded) {
-        details.classList.remove('collapsed')
-        details.classList.add('expanded')
-      } else {
-        details.classList.remove('expanded')
-        details.classList.add('collapsed')
-      }
+  renderExperience(exp) {
+    return `
+      <h3>Responsibilities</h3>
+      <ul>${exp.responsibilities.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>
+      <h3>Technologies</h3>
+      <div class="detail-tags">${exp.technologies.map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>
+    `
+  }
+
+  renderProject(proj) {
+    return `
+      <h3>What it is</h3>
+      <p>${escapeHtml(proj.description)}</p>
+      <h3>Technologies</h3>
+      <div class="detail-tags">${proj.technologies.map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>
+    `
+  }
+
+  renderSkill(skill) {
+    return `
+      <h3>${escapeHtml(skill.category)}</h3>
+      <div class="detail-tags">${skill.items.map(i => `<span>${escapeHtml(i)}</span>`).join('')}</div>
+    `
+  }
+
+  renderGeneric(d) {
+    const entries = Object.entries(d).filter(([k]) => k !== 'ref' && k !== 'skillRef')
+    if (!entries.length) {
+      return `<p>${escapeHtml(this.metric || this.description || 'No further detail recorded.')}</p>`
     }
-    
-    if (expandBtn) {
-      if (this.isExpanded) {
-        expandBtn.classList.add('expanded')
-      } else {
-        expandBtn.classList.remove('expanded')
-      }
-    }
-  }
-
-  onClick() {
-    console.log(`Task ${this.id} clicked:`, this)
-    // Show alert for tests and debugging
-    alert(`Task: ${this.title}\nType: ${this.type}\nStatus: ${this.status}`)
-    this.toggleExpand()
-    this.highlightDependencies()
-  }
-
-  highlightDependencies() {
-    // Remove existing highlights
-    document.querySelectorAll('.task-node.highlighted').forEach(node => {
-      node.classList.remove('highlighted')
-    })
-
-    // Highlight this node and its dependencies
-    this.element.classList.add('highlighted')
-    this.dependencies.forEach(depId => {
-      const depNode = document.querySelector(`#task-${depId}`)
-      if (depNode) {
-        depNode.classList.add('highlighted')
-      }
-    })
-
-    // Remove highlights after 3 seconds
-    setTimeout(() => {
-      document.querySelectorAll('.task-node.highlighted').forEach(node => {
-        node.classList.remove('highlighted')
-      })
-    }, 3000)
-  }
-
-  onHover() {
-    this.hoverScale = 1.05
-    this.applyTransform()
-    this.element.style.zIndex = '1000'
-  }
-
-  onHoverEnd() {
-    this.hoverScale = 1
-    this.applyTransform()
+    return entries
+      .map(([k, v]) => `<h3>${escapeHtml(k)}</h3><p>${escapeHtml(Array.isArray(v) ? v.join(', ') : v)}</p>`)
+      .join('')
   }
 
   setScale(scale) {
@@ -278,116 +168,31 @@ export class TaskNode {
   }
 
   applyTransform() {
-    if (this.element) {
-      const finalScale = this.scale * this.hoverScale;
-      const x = this.position?.x || 0;
-      const y = this.position?.y || 0;
-      // Set transform origin to top-left to prevent position shifts during scaling
-      this.element.style.transformOrigin = 'top left';
-      // Combine position and scale transforms
-      this.element.style.transform = `translate(${x}px, ${y}px) scale(${finalScale})`;
-    }
-  }
-
-  showDetailedView() {
-    const modal = document.createElement('div');
-    modal.className = 'task-modal';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'task-modal-content';
-    
-    const closeBtn = document.createElement('span');
-    closeBtn.className = 'close-button';
-    closeBtn.innerHTML = '&times;';
-    closeBtn.onclick = () => {
-      modal.classList.remove('show');
-      setTimeout(() => {
-        if (document.body.contains(modal)) {
-          document.body.removeChild(modal);
-        }
-      }, 300);
-    };
-    
-    modalContent.innerHTML = this.renderDetails();
-    modalContent.prepend(closeBtn);
-    modal.appendChild(modalContent);
-    
-    document.body.appendChild(modal);
-    
-    // Trigger the show animation
-    setTimeout(() => {
-      modal.classList.add('show');
-    }, 10);
-
-    // Close modal on outside click
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.classList.remove('show');
-        setTimeout(() => {
-          if (document.body.contains(modal)) {
-            document.body.removeChild(modal);
-          }
-        }, 300);
-      }
-    };
-  }
-
-  showLogs() {
-    console.log(`--- Logs for ${this.title} ---`);
-  }
-
-  generateLogData() {
-    const now = new Date()
-    const logs = [
-      { time: this.formatTime(new Date(now - 5000)), level: 'info', message: `Task ${this.id} initialized successfully` },
-      { time: this.formatTime(new Date(now - 3000)), level: 'info', message: `Dependencies checked: ${this.dependencies.join(', ') || 'none'}` },
-      { time: this.formatTime(new Date(now - 1000)), level: 'success', message: `Task ${this.id} execution completed` },
-      { time: this.formatTime(now), level: 'info', message: `Status: ${this.status}` }
-    ]
-    
-    if (this.status === 'failed') {
-      logs.push({ time: this.formatTime(now), level: 'error', message: 'Task execution failed - check configuration' })
-    }
-    
-    return logs
-  }
-
-  formatTime(date) {
-    return date.toLocaleTimeString('en-US', { 
-      hour12: false, 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit' 
-    })
+    if (!this.element) return
+    const x = this.position?.x || 0
+    const y = this.position?.y || 0
+    // Kept in CSS custom properties so the arrival animation can compose with it.
+    this.element.style.setProperty('--nx', `${x}px`)
+    this.element.style.setProperty('--ny', `${y}px`)
+    this.element.style.transform = `translate(${x}px, ${y}px)${this.scale !== 1 ? ` scale(${this.scale})` : ''}`
   }
 
   updateStatus(newStatus) {
     this.status = newStatus
-    if (this.element) {
-      this.element.className = `task-node task-${this.type} status-${newStatus}`
-      const statusTextEl = this.element.querySelector('.status-text')
-      if (statusTextEl) {
-        statusTextEl.textContent = this.getStatusText()
-      }
-    }
+    if (!this.element) return
+    this.element.className = `task-node task-${this.type} status-${newStatus}`
+    this.element.setAttribute(
+      'aria-label',
+      `${this.title}${this.org ? `, ${this.org}` : ''}. ${this.getStatusText()}.`
+    )
   }
 
-  // Animation methods
   pulse() {
-    if (this.element) {
-      this.element.style.animation = 'pulse 1s ease-in-out'
-      setTimeout(() => {
-        this.element.style.animation = ''
-      }, 1000)
-    }
-  }
-
-  shake() {
-    if (this.element) {
-      this.element.style.animation = 'shake 0.5s ease-in-out'
-      setTimeout(() => {
-        this.element.style.animation = ''
-      }, 500)
-    }
+    if (!this.element) return
+    this.element.classList.remove('pulsing')
+    // Force reflow so the animation restarts when the same node runs twice.
+    void this.element.offsetWidth
+    this.element.classList.add('pulsing')
+    this.element.addEventListener('animationend', () => this.element?.classList.remove('pulsing'), { once: true })
   }
 }

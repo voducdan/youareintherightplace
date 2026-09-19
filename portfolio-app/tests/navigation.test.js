@@ -313,7 +313,7 @@ describe('Workflow Navigation & Dependencies', () => {
     it('should provide task detail navigation', () => {
       const task = new TaskNode('test-task', 'Test Task', 'education', 'success')
       
-      expect(task.getIcon()).toBe('🎓') // Education icon
+      expect(task.getIcon()).toContain('<svg') // Education icon, inline SVG not emoji
       expect(task.id).toBe('test-task')
       expect(task.title).toBe('Test Task')
       expect(task.type).toBe('education')

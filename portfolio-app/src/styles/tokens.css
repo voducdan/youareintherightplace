@@ -1,0 +1,147 @@
+/* Design tokens — the single source for colour and motion.
+   Light is defined on :root, dark is redefined in two places so that an explicit
+   choice wins over the OS setting in both directions. */
+
+:root {
+  /* surfaces — neutrals carry a slight green-blue bias toward the accent */
+  --paper: #f1f4f3;
+  --surface: #ffffff;
+  --surface-2: #e9eeed;
+  --surface-3: #dde5e3;
+
+  /* text */
+  --ink: #101718;
+  --ink-2: #3a4849;
+  --muted: #5b6a6a;
+
+  /* lines */
+  --line: #d5dedc;
+  --line-soft: #e4eae9;
+
+  /* accent */
+  --accent: #0a6b62;
+  --accent-ink: #064a44;
+  --accent-bg: #dceae8;
+
+  /* task states — industry vocabulary, kept semantic and separate from the accent */
+  --state-success: #15795e;
+  --state-running: #a8590b;
+  --state-failed: #af2e22;
+  --state-pending: #6b7a7a;
+  --state-success-bg: #ddefe7;
+  --state-running-bg: #f7e9d4;
+  --state-failed-bg: #f7e0dc;
+  --state-pending-bg: #e6ebeb;
+
+  /* elevation */
+  --shadow-1: 0 1px 2px rgba(16, 23, 24, 0.05);
+  --shadow-2: 0 1px 2px rgba(16, 23, 24, 0.05), 0 8px 24px -16px rgba(16, 23, 24, 0.28);
+  --shadow-3: 0 2px 6px rgba(16, 23, 24, 0.07), 0 18px 44px -22px rgba(16, 23, 24, 0.4);
+
+  /* canvas */
+  --canvas-bg: #eef2f1;
+  --canvas-dot: #d2dbd9;
+  --edge: #9db0ad;
+  --edge-lit: var(--accent);
+
+  /* type */
+  --ff-display: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ff-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --ff-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* motion — every duration on the page resolves here */
+  --motion-fast: 140ms;
+  --motion-mid: 260ms;
+  --motion-slow: 420ms;
+  --motion-edge: 520ms;
+  --motion-stagger: 60ms;
+  --motion-hop: 280ms;
+  --motion-running: 1100ms;
+  --motion-flow: 2600ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.2, 0, 0, 1);
+  --ease-draw: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #0c1113;
+    --surface: #131b1d;
+    --surface-2: #1a2426;
+    --surface-3: #223032;
+
+    --ink: #e7edeb;
+    --ink-2: #c2cfcd;
+    --muted: #90a19f;
+
+    --line: #243032;
+    --line-soft: #1c2628;
+
+    --accent: #40cfbc;
+    --accent-ink: #8be5d8;
+    --accent-bg: #0e2f2c;
+
+    --state-success: #4fc79e;
+    --state-running: #e0a45c;
+    --state-failed: #ec8377;
+    --state-pending: #7c8c8b;
+    --state-success-bg: #0f2a22;
+    --state-running-bg: #2b2113;
+    --state-failed-bg: #2c1a17;
+    --state-pending-bg: #1d2627;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -18px rgba(0, 0, 0, 0.8);
+    --shadow-3: 0 2px 8px rgba(0, 0, 0, 0.5), 0 20px 48px -24px rgba(0, 0, 0, 0.9);
+
+    --canvas-bg: #0a0f10;
+    --canvas-dot: #1d2729;
+    --edge: #3d5254;
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #0c1113;
+  --surface: #131b1d;
+  --surface-2: #1a2426;
+  --surface-3: #223032;
+
+  --ink: #e7edeb;
+  --ink-2: #c2cfcd;
+  --muted: #90a19f;
+
+  --line: #243032;
+  --line-soft: #1c2628;
+
+  --accent: #40cfbc;
+  --accent-ink: #8be5d8;
+  --accent-bg: #0e2f2c;
+
+  --state-success: #4fc79e;
+  --state-running: #e0a45c;
+  --state-failed: #ec8377;
+  --state-pending: #7c8c8b;
+  --state-success-bg: #0f2a22;
+  --state-running-bg: #2b2113;
+  --state-failed-bg: #2c1a17;
+  --state-pending-bg: #1d2627;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -18px rgba(0, 0, 0, 0.8);
+  --shadow-3: 0 2px 8px rgba(0, 0, 0, 0.5), 0 20px 48px -24px rgba(0, 0, 0, 0.9);
+
+  --canvas-bg: #0a0f10;
+  --canvas-dot: #1d2729;
+  --edge: #3d5254;
+}
+
+/* The JS animations check this too — see prefersReducedMotion() in WorkflowCanvas. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 1ms;
+    --motion-mid: 1ms;
+    --motion-slow: 1ms;
+    --motion-edge: 1ms;
+    --motion-stagger: 0ms;
+  }
+}
