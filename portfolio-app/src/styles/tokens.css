@@ -2,76 +2,82 @@
    Light is defined on :root, dark is redefined in two places so that an explicit
    choice wins over the OS setting in both directions.
 
-   Palette: "Marshmallow World RC" by Wordofmouse, COLOURlovers #1394784
-   CC-BY-NC-SA — http://creativecommons.org/licenses/by-nc-sa/3.0/
-     #FF8B38 madras mango   #F85466 dream   #F02999 hott hot pink
-     #BF5198 brenda lee     #8D839B snowman's mittens
+   Palette: Apache Airflow's default task state colours, plus the Airflow brand
+   blue #017CEE as the accent.
+     success #2ECC40   running #01FF70   failed firebrick #B22222
+     queued darkgray #A9A9A9
 
-   The set is a sequential ramp (orange to mauve) with no neutral and no dark, so:
-     - lanes take the ramp in pipeline order, which makes the colour say how far
-       along the graph a node sits;
-     - the neutral family is derived from #8D839B, the one muted colour;
-     - values marked "palette" are literal. Everything else is a tint or shade of
-       a palette colour, pushed only as far as contrast required. No new hue.
+   Stages borrow the Airflow state colours this page has no state for, so every
+   colour still comes from one documented source:
+     education mediumpurple #9370DB   experience #017CEE
+     projects turquoise #40E0D0       skills orange #FFA500
+     certifications darkorchid #9932CC
 
-   State and lane reuse the same five hues (5 colours, 8 roles). They stay legible
-   because they sit in different places: the left stripe is state, the icon is lane. */
+   Stripes, dots and legend keys keep Airflow's literals. Text-level colours are
+   shades of the same hue, pushed only as far as contrast required.
+
+   One deliberate compromise: Airflow's success and running are both green, and
+   on a white ground the lime running literal is 1.4:1 — invisible as a stripe.
+   The running card therefore carries a tinted fill and a deepened-lime border,
+   so the state never rests on the stripe alone. The two greens are only ever
+   adjacent in the legend and the toolbar, where both use the literals.
+*/
 
 :root {
-  --paper: #f1eff4;
+  --paper: #f0f3f6;
   --surface: #ffffff;
-  --surface-2: #e9e5ee;
-  --surface-3: #dad5e1;
+  --surface-2: #e6ebf0;
+  --surface-3: #d5dde5;
 
-  --ink: #241f2e;
-  --ink-2: #453e52;
-  --muted: #6d637b;
+  --ink: #1b2530;
+  --ink-2: #3c4a57;
+  --muted: #5f6b78;
 
-  --line: #dbd6e3;
-  --line-soft: #e9e5ee;
+  --line: #d3dbe3;
+  --line-soft: #e6ebf0;
 
-  --accent: #d00f7b;
-  --accent-ink: #a60c62;
-  --accent-bg: #fde5f3;
+  --accent: #016ed4;
+  --accent-ink: #0158a9;
+  --accent-bg: #e6f2fd;
 
-  --state-success: #736982;
-  --state-running: #b54b00;
-  --state-failed: #db0920;
-  --state-pending: #665f73;
+  --state-success: #1d7f28;
+  --state-running: #007f38;
+  --state-failed: #b22222;  /* airflow failed */
+  --state-pending: #6f6f6f;
 
-  --state-success-solid: #8d839b; /* palette */
-  --state-running-solid: #ee6300; /* palette */
-  --state-failed-solid: #f85466; /* palette */
-  --state-pending-solid: #9a91a8;
+  --state-success-solid: #2ecc40;  /* airflow success */
+  --state-running-solid: #01ff70;  /* airflow running */
+  --state-failed-solid: #b22222;  /* airflow failed */
+  --state-pending-solid: #949494;
 
-  --state-success-bg: #f0eff2;
-  --state-running-bg: #ffecdf;
-  --state-running-surface: #fff5ed;
-  --state-running-border: #ee6300;
-  --state-failed-bg: #feedef;
-  --state-pending-bg: #eae7ef;
+  --state-success-bg: #e6f9e8;
+  --state-running-bg: #dbffeb;
+  --state-running-surface: #e1ffee;
+  --state-running-border: #00a649;
+  --state-failed-bg: #f6e4e4;
+  --state-pending-bg: #f4f4f4;  /* tint, for chip contrast */
 
-  --lane-education: #736982;
-  --lane-experience: #b2428a;
-  --lane-projects: #d00f7b;
-  --lane-skills: #db0920;
-  --lane-certs: #b54b00;
+  --lane-education: #7f56d4;
+  --lane-experience: #016ed4;
+  --lane-projects: #147b71;
+  --lane-skills: #996300;
+  --lane-certs: #9932cc;  /* airflow skipped */
 
-  --lane-education-solid: #8d839b; /* palette */
-  --lane-experience-solid: #bf5198; /* palette */
-  --lane-projects-solid: #f02999; /* palette */
-  --lane-skills-solid: #f85466; /* palette */
-  --lane-certs-solid: #ff8b38; /* palette */
+  --lane-education-solid: #9370db;  /* airflow deferred */
+  --lane-experience-solid: #017cee;  /* airflow Airflow brand blue */
+  --lane-projects-solid: #1cab9c;  /* shade of airflow turquoise, to read on a light canvas */
+  --lane-skills-solid: #d48900;  /* shade of airflow orange, to read on a light canvas */
+  --lane-certs-solid: #9932cc;  /* airflow skipped */
 
-  --highlight: #fabfe0;
+  --highlight: #cce5fc;
 
-  --canvas-bg: #edeaf1;
-  --canvas-dot: #d8d2e0;
-  --edge: #b3acbe;
+  --canvas-bg: #edf1f5;
+  --canvas-dot: #d4dce4;
+  --edge: #aab6c2;
 
-  --shadow-1: 0 1px 2px rgba(36, 31, 46, 0.06);
-  --shadow-2: 0 1px 2px rgba(36, 31, 46, 0.06), 0 8px 24px -16px rgba(36, 31, 46, 0.32);
-  --shadow-3: 0 2px 6px rgba(36, 31, 46, 0.09), 0 18px 44px -22px rgba(36, 31, 46, 0.45);
+  --shadow-1: 0 1px 2px rgba(27, 37, 48, 0.06);
+  --shadow-2: 0 1px 2px rgba(27, 37, 48, 0.06), 0 8px 24px -16px rgba(27, 37, 48, 0.32);
+  --shadow-3: 0 2px 6px rgba(27, 37, 48, 0.09), 0 18px 44px -22px rgba(27, 37, 48, 0.45);
   --edge-lit: var(--accent);
 
   /* type */
@@ -95,56 +101,56 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --paper: #131017;
-    --surface: #1b1722;
-    --surface-2: #241f2d;
-    --surface-3: #2f2939;
+    --paper: #0d1117;
+    --surface: #151c24;
+    --surface-2: #1e2731;
+    --surface-3: #29343f;
 
-    --ink: #edeaf1;
-    --ink-2: #c9c3d3;
-    --muted: #8e849c;
+    --ink: #e8edf2;
+    --ink-2: #c2ccd6;
+    --muted: #8b98a6;
 
-    --line: #302a3a;
-    --line-soft: #221e2b;
+    --line: #2a3540;
+    --line-soft: #1c242d;
 
-    --accent: #f13ca2;
-    --accent-ink: #ff7ac0;
-    --accent-bg: #3f1531;
+    --accent: #148dfe;
+    --accent-ink: #69b7fe;
+    --accent-bg: #0b2642;
 
-    --state-success: #8e849c;
-    --state-running: #ff8b38; /* palette */
-    --state-failed: #f85466; /* palette */
-    --state-pending: #8c8498;
+    --state-success: #2ecc40;  /* airflow success */
+    --state-running: #01ff70;  /* airflow running */
+    --state-failed: #e26565;
+    --state-pending: #a9a9a9;  /* airflow queued */
 
-    --state-success-solid: #8d839b; /* palette */
-    --state-running-solid: #ff8b38; /* palette */
-    --state-failed-solid: #f85466; /* palette */
-    --state-pending-solid: #6b617a;
+    --state-success-solid: #2ecc40;  /* airflow success */
+    --state-running-solid: #01ff70;  /* airflow running */
+    --state-failed-solid: #c52626;  /* tint of airflow firebrick, for a dark card */
+    --state-pending-solid: #a9a9a9;  /* airflow queued */
 
-    --state-success-bg: #24202a;
-    --state-running-bg: #3d261d;
-    --state-running-surface: #201c29;
-    --state-running-border: #965937;
-    --state-failed-bg: #381b24;
-    --state-pending-bg: #221e2b;
+    --state-success-bg: #122f1e;
+    --state-running-bg: #0b3223;
+    --state-running-surface: #16231d;
+    --state-running-border: #01ff70;  /* airflow running */
+    --state-failed-bg: #2e1419;
+    --state-pending-bg: #23262b;
 
-    --lane-education: #8e849c;
-    --lane-experience: #c767a5;
-    --lane-projects: #f13ca2;
-    --lane-skills: #f85466; /* palette */
-    --lane-certs: #ff8b38; /* palette */
+    --lane-education: #9c7bde;
+    --lane-experience: #148dfe;
+    --lane-projects: #40e0d0;  /* airflow reschedule */
+    --lane-skills: #ffa500;  /* airflow upstream_failed */
+    --lane-certs: #b76edb;
 
-    --lane-education-solid: #8d839b; /* palette */
-    --lane-experience-solid: #bf5198; /* palette */
-    --lane-projects-solid: #f02999; /* palette */
-    --lane-skills-solid: #f85466; /* palette */
-    --lane-certs-solid: #ff8b38; /* palette */
+    --lane-education-solid: #9370db;  /* airflow deferred */
+    --lane-experience-solid: #017cee;  /* airflow Airflow brand blue */
+    --lane-projects-solid: #40e0d0;  /* airflow reschedule */
+    --lane-skills-solid: #ffa500;  /* airflow upstream_failed */
+    --lane-certs-solid: #9932cc;  /* airflow skipped */
 
-    --highlight: #51173b;
+    --highlight: #0a2d4f;
 
-    --canvas-bg: #0f0d13;
-    --canvas-dot: #221d2a;
-    --edge: #3d3549;
+    --canvas-bg: #0a0e13;
+    --canvas-dot: #1b232b;
+    --edge: #3a4653;
 
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
     --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
@@ -153,56 +159,56 @@
 }
 
 :root[data-theme='dark'] {
-  --paper: #131017;
-  --surface: #1b1722;
-  --surface-2: #241f2d;
-  --surface-3: #2f2939;
+  --paper: #0d1117;
+  --surface: #151c24;
+  --surface-2: #1e2731;
+  --surface-3: #29343f;
 
-  --ink: #edeaf1;
-  --ink-2: #c9c3d3;
-  --muted: #8e849c;
+  --ink: #e8edf2;
+  --ink-2: #c2ccd6;
+  --muted: #8b98a6;
 
-  --line: #302a3a;
-  --line-soft: #221e2b;
+  --line: #2a3540;
+  --line-soft: #1c242d;
 
-  --accent: #f13ca2;
-  --accent-ink: #ff7ac0;
-  --accent-bg: #3f1531;
+  --accent: #148dfe;
+  --accent-ink: #69b7fe;
+  --accent-bg: #0b2642;
 
-  --state-success: #8e849c;
-  --state-running: #ff8b38; /* palette */
-  --state-failed: #f85466; /* palette */
-  --state-pending: #8c8498;
+  --state-success: #2ecc40;  /* airflow success */
+  --state-running: #01ff70;  /* airflow running */
+  --state-failed: #e26565;
+  --state-pending: #a9a9a9;  /* airflow queued */
 
-  --state-success-solid: #8d839b; /* palette */
-  --state-running-solid: #ff8b38; /* palette */
-  --state-failed-solid: #f85466; /* palette */
-  --state-pending-solid: #6b617a;
+  --state-success-solid: #2ecc40;  /* airflow success */
+  --state-running-solid: #01ff70;  /* airflow running */
+  --state-failed-solid: #c52626;  /* tint of airflow firebrick, for a dark card */
+  --state-pending-solid: #a9a9a9;  /* airflow queued */
 
-  --state-success-bg: #24202a;
-  --state-running-bg: #3d261d;
-  --state-running-surface: #201c29;
-  --state-running-border: #965937;
-  --state-failed-bg: #381b24;
-  --state-pending-bg: #221e2b;
+  --state-success-bg: #122f1e;
+  --state-running-bg: #0b3223;
+  --state-running-surface: #16231d;
+  --state-running-border: #01ff70;  /* airflow running */
+  --state-failed-bg: #2e1419;
+  --state-pending-bg: #23262b;
 
-  --lane-education: #8e849c;
-  --lane-experience: #c767a5;
-  --lane-projects: #f13ca2;
-  --lane-skills: #f85466; /* palette */
-  --lane-certs: #ff8b38; /* palette */
+  --lane-education: #9c7bde;
+  --lane-experience: #148dfe;
+  --lane-projects: #40e0d0;  /* airflow reschedule */
+  --lane-skills: #ffa500;  /* airflow upstream_failed */
+  --lane-certs: #b76edb;
 
-  --lane-education-solid: #8d839b; /* palette */
-  --lane-experience-solid: #bf5198; /* palette */
-  --lane-projects-solid: #f02999; /* palette */
-  --lane-skills-solid: #f85466; /* palette */
-  --lane-certs-solid: #ff8b38; /* palette */
+  --lane-education-solid: #9370db;  /* airflow deferred */
+  --lane-experience-solid: #017cee;  /* airflow Airflow brand blue */
+  --lane-projects-solid: #40e0d0;  /* airflow reschedule */
+  --lane-skills-solid: #ffa500;  /* airflow upstream_failed */
+  --lane-certs-solid: #9932cc;  /* airflow skipped */
 
-  --highlight: #51173b;
+  --highlight: #0a2d4f;
 
-  --canvas-bg: #0f0d13;
-  --canvas-dot: #221d2a;
-  --edge: #3d3549;
+  --canvas-bg: #0a0e13;
+  --canvas-dot: #1b232b;
+  --edge: #3a4653;
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
