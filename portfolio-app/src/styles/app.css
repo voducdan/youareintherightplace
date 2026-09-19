@@ -263,13 +263,13 @@ body {
 }
 
 .run-stats i.success {
-  background: var(--state-success);
+  background: var(--state-success-solid);
 }
 .run-stats i.running {
-  background: var(--state-running);
+  background: var(--state-running-solid);
 }
 .run-stats i.failed {
-  background: var(--state-failed);
+  background: var(--state-failed-solid);
 }
 
 .dag-id {
@@ -363,7 +363,7 @@ body {
   padding: 10px 13px 11px 12px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--state-pending);
+  border-left: 3px solid var(--state-pending-solid);
   border-radius: 9px;
   box-shadow: var(--shadow-2);
   font-family: var(--ff-display);
@@ -394,16 +394,17 @@ body {
 
 /* state stripe carries status — no repeated "Completed" label */
 .task-node.status-success {
-  border-left-color: var(--state-success);
+  border-left-color: var(--state-success-solid);
 }
 .task-node.status-running {
-  border-left-color: var(--state-running);
+  border-left-color: var(--state-running-solid);
+  background: var(--state-running-surface);
 }
 .task-node.status-failed {
-  border-left-color: var(--state-failed);
+  border-left-color: var(--state-failed-solid);
 }
 .task-node.status-pending {
-  border-left-color: var(--state-pending);
+  border-left-color: var(--state-pending-solid);
 }
 
 .node-top {
@@ -587,13 +588,13 @@ body {
 }
 
 .dag-legend .key.success {
-  background: var(--state-success);
+  background: var(--state-success-solid);
 }
 .dag-legend .key.running {
-  background: var(--state-running);
+  background: var(--state-running-solid);
 }
 .dag-legend .key.pending {
-  background: var(--state-pending);
+  background: var(--state-pending-solid);
 }
 .dag-legend .key.group {
   height: 10px;
@@ -854,16 +855,17 @@ body {
   padding: 13px 15px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--state-pending);
+  border-left: 3px solid var(--state-pending-solid);
   border-radius: 9px;
   box-shadow: var(--shadow-1);
 }
 
 .tl-card.status-success {
-  border-left-color: var(--state-success);
+  border-left-color: var(--state-success-solid);
 }
 .tl-card.status-running {
-  border-left-color: var(--state-running);
+  border-left-color: var(--state-running-solid);
+  background: var(--state-running-surface);
 }
 
 .tl-card .tl-top {
@@ -1048,7 +1050,7 @@ body {
   padding: 26px 28px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--state-failed);
+  border-left: 3px solid var(--state-failed-solid);
   border-radius: 10px;
   box-shadow: var(--shadow-2);
   text-align: left;
