@@ -429,13 +429,28 @@ export class WorkflowCanvas {
     return { x: d.x, y: d.y, w, h }
   }
 
+  /**
+   * The graph runs left to right along a row and top to bottom between rows, so
+   * the edge picks its anchors from the direction of travel. A stage-to-stage
+   * edge that left from the right-hand side would have to sweep back across the
+   * cards beneath it; leaving from the bottom keeps it in the gap between rows.
+   */
   edgePath(from, to) {
+    const goesDown = to.y >= from.y + from.h
+
+    if (goesDown) {
+      const x1 = from.x + from.w / 2
+      const y1 = from.y + from.h
+      const x2 = to.x + to.w / 2
+      const y2 = to.y
+      const dy = Math.max(30, (y2 - y1) * 0.55)
+      return `M ${x1} ${y1} C ${x1} ${y1 + dy}, ${x2} ${y2 - dy}, ${x2} ${y2}`
+    }
+
     const x1 = from.x + from.w
     const y1 = from.y + from.h / 2
     const x2 = to.x
     const y2 = to.y + to.h / 2
-    // Horizontal control points keep every edge leaving and entering flat, which
-    // reads as direction even where many edges fan out from one node.
     const dx = Math.max(40, (x2 - x1) * 0.5)
     return `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`
   }
@@ -590,6 +605,7 @@ export class WorkflowCanvas {
             task.period = item.period || ''
             task.metric = item.metric || ''
             task.tags = item.tags || []
+            task.start = item.start || ''
             this.addTask(task, item.position.x, item.position.y)
           }
         })

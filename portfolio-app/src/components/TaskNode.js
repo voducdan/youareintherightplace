@@ -67,6 +67,8 @@ export class TaskNode {
     this.period = ''
     this.metric = ''
     this.tags = []
+    // 'YYYY-MM'. Orders the run chronologically; see getExecutionOrder.
+    this.start = ''
 
     this.scale = 1
   }
