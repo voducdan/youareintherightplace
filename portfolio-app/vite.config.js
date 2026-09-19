@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/spec-driven/' : '/',
+  // Must match the GitHub Pages subpath, i.e. the repo name.
+  base: process.env.NODE_ENV === 'production' ? '/youareintherightplace/' : '/',
   server: {
     port: 5174,
     open: true,

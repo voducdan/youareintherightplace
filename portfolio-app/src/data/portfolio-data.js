@@ -8,7 +8,7 @@ export const portfolioData = {
     email: 'voducdand99@gmail.com',
     phone: '0972184325',
     location: 'Binh Thanh district, Ho Chi Minh city',
-    website: 'https://voducdan.github.io/spec-driven/',
+    website: 'https://voducdan.github.io/youareintherightplace/',
     github: 'https://github.com/voducdan',
     language: 'Fluent in English',
     summary:

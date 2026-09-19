@@ -4,7 +4,7 @@ This repository contains a spec-driven development framework and Dan Vo's intera
 
 ## 🚀 Live Demo
 
-**Portfolio Website**: [View Live Demo](https://voducdan.github.io/spec-driven/portfolio-app/)
+**Portfolio Website**: [View Live Demo](https://voducdan.github.io/youareintherightplace/)
 
 ## 📁 Repository Structure
 
