@@ -41,6 +41,7 @@ export class TaskGroup {
     const group = document.createElement('div')
     group.className = `task-group ${this.isExpanded ? 'expanded' : 'collapsed'}`
     group.id = `group-${this.id}`
+    if (this.lane) group.dataset.lane = this.lane
     
     // Remove left/top positioning. Position will be set by transform.
     group.style.position = 'absolute';

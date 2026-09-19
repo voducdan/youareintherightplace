@@ -47,8 +47,26 @@
   --state-success-bg: #e4e7e9;
   --state-running-bg: #fff4cf; /* tint of #FFE882 */
   --state-running-surface: #fff6da; /* tint of #FFE882 */
+  --state-running-border: #e0bd55;
   --state-failed-bg: #fbe0de;
   --state-pending-bg: #e8ebec;
+
+
+  /* lane colours — one per pipeline stage, so every palette colour has a visible job.
+     Edges inherit their source node's lane, which is where most of the colour lands. */
+  --lane-education: #535e66; /* palette */
+  --lane-experience: #c2281f; /* shade of #FF473D, text-safe */
+  --lane-projects: #846500; /* shade of #FFE882, text-safe */
+  --lane-skills: #6b6463; /* shade of #8A8080 */
+  --lane-certs: #756e6e; /* shade of #827A7A */
+
+  --lane-education-solid: #535e66; /* palette */
+  --lane-experience-solid: #ff473d; /* palette */
+  --lane-projects-solid: #dbb400; /* shade of #FFE882 */
+  --lane-skills-solid: #8a8080; /* palette */
+  --lane-certs-solid: #a6a0a0; /* tint of #827A7A */
+
+  --highlight: #ffe882; /* palette — the literal highlighter swipe */
 
   /* elevation */
   --shadow-1: 0 1px 2px rgba(44, 51, 56, 0.05);
@@ -110,10 +128,27 @@
 
     --state-success-bg: #232a30;
     --state-running-bg: #3a3320;
-  --state-running-surface: #232019;
-    --state-running-surface: #232019;
+  --state-running-surface: #21252b;
+    --state-running-border: #8a7635;
+    --state-running-surface: #21252b;
+  --state-running-border: #8a7635;
     --state-failed-bg: #35211f;
     --state-pending-bg: #262322;
+
+
+    --lane-education: #9fb0bc;
+    --lane-experience: #ff7a72;
+    --lane-projects: #ffe882;
+    --lane-skills: #9a9290;
+    --lane-certs: #b5aeae;
+
+    --lane-education-solid: #6e7d88;
+    --lane-experience-solid: #ff473d;
+    --lane-projects-solid: #ffe882;
+    --lane-skills-solid: #8a8080;
+    --lane-certs-solid: #a6a0a0;
+
+    --highlight: #5a4d22;
 
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
     --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
@@ -156,6 +191,21 @@
   --state-running-bg: #3a3320;
   --state-failed-bg: #35211f;
   --state-pending-bg: #262322;
+
+
+  --lane-education: #9fb0bc;
+  --lane-experience: #ff7a72;
+  --lane-projects: #ffe882;
+  --lane-skills: #9a9290;
+  --lane-certs: #b5aeae;
+
+  --lane-education-solid: #6e7d88;
+  --lane-experience-solid: #ff473d;
+  --lane-projects-solid: #ffe882;
+  --lane-skills-solid: #8a8080;
+  --lane-certs-solid: #a6a0a0;
+
+  --highlight: #5a4d22;
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);

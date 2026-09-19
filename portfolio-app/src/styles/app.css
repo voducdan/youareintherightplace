@@ -142,7 +142,7 @@ body {
 }
 
 .highlights .v {
-  display: block;
+  display: inline-block;
   font-family: var(--ff-display);
   font-weight: 700;
   font-size: 1.05rem;
@@ -150,9 +150,15 @@ body {
   line-height: 1.15;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
+  /* highlighter swipe across the lower half of the digits */
+  background-image: linear-gradient(transparent 50%, var(--highlight) 50%);
+  padding-inline: 3px;
+  padding-bottom: 1px;
 }
 
 .highlights .l {
+  display: block;
+  margin-top: 2px;
   font-family: var(--ff-mono);
   font-size: 9.5px;
   letter-spacing: 0.07em;
@@ -326,17 +332,34 @@ body {
 .edge-path {
   fill: none;
   stroke: var(--edge);
-  stroke-width: 1.6;
+  stroke-width: 1.7;
   stroke-linecap: round;
+  opacity: 0.62;
   transition:
     stroke var(--motion-fast) ease,
     stroke-width var(--motion-fast) ease,
     opacity var(--motion-fast) ease;
 }
 
+.edge-path[data-lane='education'] {
+  stroke: var(--lane-education-solid);
+}
+.edge-path[data-lane='experience'] {
+  stroke: var(--lane-experience-solid);
+}
+.edge-path[data-lane='projects'] {
+  stroke: var(--lane-projects-solid);
+}
+.edge-path[data-lane='skills'] {
+  stroke: var(--lane-skills-solid);
+}
+.edge-path[data-lane='certs'] {
+  stroke: var(--lane-certs-solid);
+}
+
 .edge-path.lit {
-  stroke: var(--edge-lit);
-  stroke-width: 2.4;
+  stroke-width: 2.6;
+  opacity: 1;
 }
 
 .edge-path.dimmed {
@@ -397,6 +420,7 @@ body {
   border-left-color: var(--state-success-solid);
 }
 .task-node.status-running {
+  border-color: var(--state-running-border);
   border-left-color: var(--state-running-solid);
   background: var(--state-running-surface);
 }
@@ -481,9 +505,27 @@ body {
   color: var(--muted);
 }
 
-/* running state gets the one pulse in the codebase */
-.task-node.status-running .node-org svg {
-  color: var(--state-running);
+/* ---- lane colour: carried by the icon and the org label ---- */
+
+.task-node[data-lane='education'] .node-org,
+.task-node[data-lane='education'] .node-org svg {
+  color: var(--lane-education);
+}
+.task-node[data-lane='experience'] .node-org,
+.task-node[data-lane='experience'] .node-org svg {
+  color: var(--lane-experience);
+}
+.task-node[data-lane='projects'] .node-org,
+.task-node[data-lane='projects'] .node-org svg {
+  color: var(--lane-projects);
+}
+.task-node[data-lane='skills'] .node-org,
+.task-node[data-lane='skills'] .node-org svg {
+  color: var(--lane-skills);
+}
+.task-node[data-lane='certs'] .node-org,
+.task-node[data-lane='certs'] .node-org svg {
+  color: var(--lane-certs);
 }
 
 .task-node.pulsing {
@@ -530,7 +572,7 @@ body {
   left: 14px;
   padding: 1px 9px;
   background: var(--paper);
-  border: 1px solid var(--line);
+  border: 1px solid currentColor;
   border-radius: 20px;
   font-family: var(--ff-mono);
   font-size: 9.5px;
@@ -538,6 +580,22 @@ body {
   text-transform: uppercase;
   color: var(--muted);
   white-space: nowrap;
+}
+
+.task-group[data-lane='education'] .group-label {
+  color: var(--lane-education);
+}
+.task-group[data-lane='experience'] .group-label {
+  color: var(--lane-experience);
+}
+.task-group[data-lane='projects'] .group-label {
+  color: var(--lane-projects);
+}
+.task-group[data-lane='skills'] .group-label {
+  color: var(--lane-skills);
+}
+.task-group[data-lane='certs'] .group-label {
+  color: var(--lane-certs);
 }
 
 .task-group.hidden {
@@ -596,12 +654,26 @@ body {
 .dag-legend .key.pending {
   background: var(--state-pending-solid);
 }
-.dag-legend .key.group {
-  height: 10px;
-  width: 14px;
-  border: 1px dashed var(--line);
-  border-radius: 3px;
-  background: transparent;
+.dag-legend .legend-split {
+  margin-top: 5px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.dag-legend .key.lane[data-lane='education'] {
+  background: var(--lane-education-solid);
+}
+.dag-legend .key.lane[data-lane='experience'] {
+  background: var(--lane-experience-solid);
+}
+.dag-legend .key.lane[data-lane='projects'] {
+  background: var(--lane-projects-solid);
+}
+.dag-legend .key.lane[data-lane='skills'] {
+  background: var(--lane-skills-solid);
+}
+.dag-legend .key.lane[data-lane='certs'] {
+  background: var(--lane-certs-solid);
 }
 
 /* ============================================================
@@ -864,6 +936,7 @@ body {
   border-left-color: var(--state-success-solid);
 }
 .tl-card.status-running {
+  border-color: var(--state-running-border);
   border-left-color: var(--state-running-solid);
   background: var(--state-running-surface);
 }

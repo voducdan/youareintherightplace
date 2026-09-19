@@ -28,6 +28,21 @@ function escapeHtml(value) {
   )
 }
 
+// Pipeline stage a node belongs to. Drives the lane colour on the icon, the group
+// chip and every edge leaving the node.
+export const LANE_OF_TYPE = {
+  start: 'education',
+  education: 'education',
+  experience: 'experience',
+  projects: 'projects',
+  skills: 'skills',
+  certifications: 'certs',
+}
+
+export function laneOf(type) {
+  return LANE_OF_TYPE[type] || 'skills'
+}
+
 const STATUS_TEXT = {
   pending: 'Queued',
   running: 'Running',
@@ -71,6 +86,7 @@ export class TaskNode {
     node.className = `task-node task-${this.type} status-${this.status}`
     node.id = `task-${this.id}`
     node.dataset.id = this.id
+    node.dataset.lane = laneOf(this.type)
     node.tabIndex = 0
     node.setAttribute('role', 'button')
     node.setAttribute('aria-label', `${this.title}${this.org ? `, ${this.org}` : ''}. ${this.getStatusText()}.`)

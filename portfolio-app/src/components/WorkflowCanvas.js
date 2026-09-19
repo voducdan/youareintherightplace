@@ -3,7 +3,7 @@
 // Layout: a fixed header (identity + headline numbers), a toolbar, and a pannable
 // canvas holding two synchronised layers — an SVG edge layer and an HTML node layer.
 // Both are moved by a single transform on each layer, never per node.
-import { TaskNode } from './TaskNode.js'
+import { TaskNode, laneOf } from './TaskNode.js'
 import { TaskGroup } from './TaskGroup.js'
 import { portfolioData } from '../data/portfolio-data.js'
 
@@ -129,7 +129,12 @@ export class WorkflowCanvas {
           <span class="row"><i class="key success"></i>Success</span>
           <span class="row"><i class="key running"></i>Running</span>
           <span class="row"><i class="key pending"></i>Queued</span>
-          <span class="row"><i class="key group"></i>Task group</span>
+          <span class="legend-title legend-split">Stage</span>
+          <span class="row"><i class="key lane" data-lane="education"></i>Education</span>
+          <span class="row"><i class="key lane" data-lane="experience"></i>Experience</span>
+          <span class="row"><i class="key lane" data-lane="projects"></i>Projects</span>
+          <span class="row"><i class="key lane" data-lane="skills"></i>Skills</span>
+          <span class="row"><i class="key lane" data-lane="certs"></i>Certifications</span>
         </div>
       </div>
 
@@ -446,6 +451,9 @@ export class WorkflowCanvas {
     path.setAttribute('marker-end', 'url(#arrow)')
     path.dataset.from = fromTaskId
     path.dataset.to = toTaskId
+    // An edge takes the lane of the node it leaves, so a bundle of edges reads as
+    // "these all come from experience" without tracing each one back.
+    path.dataset.lane = laneOf(this.tasks.get(fromTaskId)?.task.type)
 
     const dot = document.createElementNS(SVG_NS, 'circle')
     dot.setAttribute('class', 'flow-dot')
@@ -564,6 +572,7 @@ export class WorkflowCanvas {
           if (item.isGroup) {
             const group = new TaskGroup(item.id, item.title, [], false)
             group.dependencies = item.dependencies || []
+            group.lane = item.id.replace(/^group-/, '')
             this.addGroup(group, item.position.x, item.position.y)
           } else {
             const task = new TaskNode(
