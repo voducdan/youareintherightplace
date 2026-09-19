@@ -129,14 +129,6 @@ The portfolio is automatically deployed to GitHub Pages using GitHub Actions:
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 📞 Contact
-
-**Dan Vo**
-- Email: voducdand99@gmail.com
-- Phone: 0972184325
-- Location: Ho Chi Minh City, Vietnam
-- Portfolio: [Live Demo](https://voducdan.github.io/spec-driven/portfolio-app/)
-
 ---
 
 *Built with ❤️ using modern web technologies and Airflow-inspired design principles.*
