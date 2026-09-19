@@ -2,81 +2,76 @@
    Light is defined on :root, dark is redefined in two places so that an explicit
    choice wins over the OS setting in both directions.
 
-   Palette: "Better Call Saul" by Trixxie, COLOURlovers #4218872
-     #535E66 slate   #FFE882 yellow   #FF473D red   #8A8080 grey   #827A7A grey
+   Palette: "Marshmallow World RC" by Wordofmouse, COLOURlovers #1394784
+   CC-BY-NC-SA — http://creativecommons.org/licenses/by-nc-sa/3.0/
+     #FF8B38 madras mango   #F85466 dream   #F02999 hott hot pink
+     #BF5198 brenda lee     #8D839B snowman's mittens
 
-   Those five are the source. Where a literal fails contrast at text size, a tint or
-   shade of the same hue is used instead and marked below; no sixth hue is introduced.
-   The palette has no green, so success takes the slate and yellow is spent on the one
-   running task — the page's only loud colour. */
+   The set is a sequential ramp (orange to mauve) with no neutral and no dark, so:
+     - lanes take the ramp in pipeline order, which makes the colour say how far
+       along the graph a node sits;
+     - the neutral family is derived from #8D839B, the one muted colour;
+     - values marked "palette" are literal. Everything else is a tint or shade of
+       a palette colour, pushed only as far as contrast required. No new hue.
+
+   State and lane reuse the same five hues (5 colours, 8 roles). They stay legible
+   because they sit in different places: the left stripe is state, the icon is lane. */
 
 :root {
-  /* surfaces — slate-tinted neutrals from #535E66; the warm greys carry the text */
-  --paper: #eef0f1;
+  --paper: #f1eff4;
   --surface: #ffffff;
-  --surface-2: #e5e8ea;
-  --surface-3: #d7dcdf;
+  --surface-2: #e9e5ee;
+  --surface-3: #dad5e1;
 
-  /* text — shades of the slate */
-  --ink: #2c3338;
-  --ink-2: #4a545c;
-  --muted: #6b6463; /* shade of #827A7A, for 4.7:1 on the grey surfaces */
+  --ink: #241f2e;
+  --ink-2: #453e52;
+  --muted: #6d637b;
 
-  /* lines */
-  --line: #d4d9dc;
-  --line-soft: #e5e9eb;
+  --line: #dbd6e3;
+  --line-soft: #e9e5ee;
 
-  /* accent — the yellow. Deepened for text on light ground; the literal is a fill. */
-  --accent: #846500; /* shade of #FFE882 */
-  --accent-ink: #6b5200;
-  --accent-bg: #fff4ce; /* tint of #FFE882 */
+  --accent: #d00f7b;
+  --accent-ink: #a60c62;
+  --accent-bg: #fde5f3;
 
-  /* task states.
-     --state-* is text-safe; --state-*-solid is the stripe, dot and legend key, where
-     a saturated fill reads fine and the literal palette colour belongs. */
-  --state-success: #535e66; /* palette */
-  --state-running: #8a6100; /* shade of #FFE882 */
-  --state-failed: #c2281f; /* shade of #FF473D */
-  --state-pending: #8d9296;
+  --state-success: #736982;
+  --state-running: #b54b00;
+  --state-failed: #db0920;
+  --state-pending: #665f73;
 
-  --state-success-solid: #535e66; /* palette */
-  --state-running-solid: #dbb400; /* shade of #FFE882 */
-  --state-failed-solid: #ff473d; /* palette */
-  --state-pending-solid: #aeb4b7;
+  --state-success-solid: #8d839b; /* palette */
+  --state-running-solid: #ee6300; /* palette */
+  --state-failed-solid: #f85466; /* palette */
+  --state-pending-solid: #9a91a8;
 
-  --state-success-bg: #e4e7e9;
-  --state-running-bg: #fff4cf; /* tint of #FFE882 */
-  --state-running-surface: #fff6da; /* tint of #FFE882 */
-  --state-running-border: #e0bd55;
-  --state-failed-bg: #fbe0de;
-  --state-pending-bg: #e8ebec;
+  --state-success-bg: #f0eff2;
+  --state-running-bg: #ffecdf;
+  --state-running-surface: #fff5ed;
+  --state-running-border: #ee6300;
+  --state-failed-bg: #feedef;
+  --state-pending-bg: #eae7ef;
 
+  --lane-education: #736982;
+  --lane-experience: #b2428a;
+  --lane-projects: #d00f7b;
+  --lane-skills: #db0920;
+  --lane-certs: #b54b00;
 
-  /* lane colours — one per pipeline stage, so every palette colour has a visible job.
-     Edges inherit their source node's lane, which is where most of the colour lands. */
-  --lane-education: #535e66; /* palette */
-  --lane-experience: #c2281f; /* shade of #FF473D, text-safe */
-  --lane-projects: #846500; /* shade of #FFE882, text-safe */
-  --lane-skills: #6b6463; /* shade of #8A8080 */
-  --lane-certs: #756e6e; /* shade of #827A7A */
+  --lane-education-solid: #8d839b; /* palette */
+  --lane-experience-solid: #bf5198; /* palette */
+  --lane-projects-solid: #f02999; /* palette */
+  --lane-skills-solid: #f85466; /* palette */
+  --lane-certs-solid: #ff8b38; /* palette */
 
-  --lane-education-solid: #535e66; /* palette */
-  --lane-experience-solid: #ff473d; /* palette */
-  --lane-projects-solid: #dbb400; /* shade of #FFE882 */
-  --lane-skills-solid: #8a8080; /* palette */
-  --lane-certs-solid: #a6a0a0; /* tint of #827A7A */
+  --highlight: #fabfe0;
 
-  --highlight: #ffe882; /* palette — the literal highlighter swipe */
+  --canvas-bg: #edeaf1;
+  --canvas-dot: #d8d2e0;
+  --edge: #b3acbe;
 
-  /* elevation */
-  --shadow-1: 0 1px 2px rgba(44, 51, 56, 0.05);
-  --shadow-2: 0 1px 2px rgba(44, 51, 56, 0.05), 0 8px 24px -16px rgba(44, 51, 56, 0.3);
-  --shadow-3: 0 2px 6px rgba(44, 51, 56, 0.08), 0 18px 44px -22px rgba(44, 51, 56, 0.42);
-
-  /* canvas */
-  --canvas-bg: #eaedee;
-  --canvas-dot: #d2d8da;
-  --edge: #a6aeb2; /* tint of #535E66 */
+  --shadow-1: 0 1px 2px rgba(36, 31, 46, 0.06);
+  --shadow-2: 0 1px 2px rgba(36, 31, 46, 0.06), 0 8px 24px -16px rgba(36, 31, 46, 0.32);
+  --shadow-3: 0 2px 6px rgba(36, 31, 46, 0.09), 0 18px 44px -22px rgba(36, 31, 46, 0.45);
   --edge-lit: var(--accent);
 
   /* type */
@@ -100,120 +95,118 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --paper: #15171a;
-    --surface: #1d2126;
-    --surface-2: #262b31;
-    --surface-3: #323841;
+    --paper: #131017;
+    --surface: #1b1722;
+    --surface-2: #241f2d;
+    --surface-3: #2f2939;
 
-    --ink: #e8e4e1;
-    --ink-2: #c5bfbc;
-    --muted: #9a9290; /* tint of #8A8080 */
+    --ink: #edeaf1;
+    --ink-2: #c9c3d3;
+    --muted: #8e849c;
 
-    --line: #343a41;
-    --line-soft: #272c32;
+    --line: #302a3a;
+    --line-soft: #221e2b;
 
-    --accent: #ffe882; /* palette, literal — 12:1 on the dark surface */
-    --accent-ink: #fff1b8;
-    --accent-bg: #3a3320;
+    --accent: #f13ca2;
+    --accent-ink: #ff7ac0;
+    --accent-bg: #3f1531;
 
-    --state-success: #9fb0bc; /* tint of #535E66, for contrast on dark */
-    --state-running: #ffe882; /* palette */
-    --state-failed: #ff7a72; /* tint of #FF473D */
-    --state-pending: #8b8280;
+    --state-success: #8e849c;
+    --state-running: #ff8b38; /* palette */
+    --state-failed: #f85466; /* palette */
+    --state-pending: #8c8498;
 
-    --state-success-solid: #6e7d88;
-    --state-running-solid: #ffe882; /* palette */
-    --state-failed-solid: #ff473d; /* palette */
-    --state-pending-solid: #5f5855;
+    --state-success-solid: #8d839b; /* palette */
+    --state-running-solid: #ff8b38; /* palette */
+    --state-failed-solid: #f85466; /* palette */
+    --state-pending-solid: #6b617a;
 
-    --state-success-bg: #232a30;
-    --state-running-bg: #3a3320;
-  --state-running-surface: #21252b;
-    --state-running-border: #8a7635;
-    --state-running-surface: #21252b;
-  --state-running-border: #8a7635;
-    --state-failed-bg: #35211f;
-    --state-pending-bg: #262322;
+    --state-success-bg: #24202a;
+    --state-running-bg: #3d261d;
+    --state-running-surface: #201c29;
+    --state-running-border: #965937;
+    --state-failed-bg: #381b24;
+    --state-pending-bg: #221e2b;
 
+    --lane-education: #8e849c;
+    --lane-experience: #c767a5;
+    --lane-projects: #f13ca2;
+    --lane-skills: #f85466; /* palette */
+    --lane-certs: #ff8b38; /* palette */
 
-    --lane-education: #9fb0bc;
-    --lane-experience: #ff7a72;
-    --lane-projects: #ffe882;
-    --lane-skills: #9a9290;
-    --lane-certs: #b5aeae;
+    --lane-education-solid: #8d839b; /* palette */
+    --lane-experience-solid: #bf5198; /* palette */
+    --lane-projects-solid: #f02999; /* palette */
+    --lane-skills-solid: #f85466; /* palette */
+    --lane-certs-solid: #ff8b38; /* palette */
 
-    --lane-education-solid: #6e7d88;
-    --lane-experience-solid: #ff473d;
-    --lane-projects-solid: #ffe882;
-    --lane-skills-solid: #8a8080;
-    --lane-certs-solid: #a6a0a0;
+    --highlight: #51173b;
 
-    --highlight: #5a4d22;
+    --canvas-bg: #0f0d13;
+    --canvas-dot: #221d2a;
+    --edge: #3d3549;
 
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
     --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
     --shadow-3: 0 2px 8px rgba(0, 0, 0, 0.55), 0 20px 48px -24px rgba(0, 0, 0, 0.95);
-
-    --canvas-bg: #101315;
-    --canvas-dot: #23282d;
-    --edge: #454b52;
   }
 }
 
 :root[data-theme='dark'] {
-  --paper: #15171a;
-  --surface: #1d2126;
-  --surface-2: #262b31;
-  --surface-3: #323841;
+  --paper: #131017;
+  --surface: #1b1722;
+  --surface-2: #241f2d;
+  --surface-3: #2f2939;
 
-  --ink: #e8e4e1;
-  --ink-2: #c5bfbc;
-  --muted: #9a9290;
+  --ink: #edeaf1;
+  --ink-2: #c9c3d3;
+  --muted: #8e849c;
 
-  --line: #343a41;
-  --line-soft: #272c32;
+  --line: #302a3a;
+  --line-soft: #221e2b;
 
-  --accent: #ffe882;
-  --accent-ink: #fff1b8;
-  --accent-bg: #3a3320;
+  --accent: #f13ca2;
+  --accent-ink: #ff7ac0;
+  --accent-bg: #3f1531;
 
-  --state-success: #9fb0bc;
-  --state-running: #ffe882;
-  --state-failed: #ff7a72;
-  --state-pending: #8b8280;
+  --state-success: #8e849c;
+  --state-running: #ff8b38; /* palette */
+  --state-failed: #f85466; /* palette */
+  --state-pending: #8c8498;
 
-  --state-success-solid: #6e7d88;
-  --state-running-solid: #ffe882;
-  --state-failed-solid: #ff473d;
-  --state-pending-solid: #5f5855;
+  --state-success-solid: #8d839b; /* palette */
+  --state-running-solid: #ff8b38; /* palette */
+  --state-failed-solid: #f85466; /* palette */
+  --state-pending-solid: #6b617a;
 
-  --state-success-bg: #232a30;
-  --state-running-bg: #3a3320;
-  --state-failed-bg: #35211f;
-  --state-pending-bg: #262322;
+  --state-success-bg: #24202a;
+  --state-running-bg: #3d261d;
+  --state-running-surface: #201c29;
+  --state-running-border: #965937;
+  --state-failed-bg: #381b24;
+  --state-pending-bg: #221e2b;
 
+  --lane-education: #8e849c;
+  --lane-experience: #c767a5;
+  --lane-projects: #f13ca2;
+  --lane-skills: #f85466; /* palette */
+  --lane-certs: #ff8b38; /* palette */
 
-  --lane-education: #9fb0bc;
-  --lane-experience: #ff7a72;
-  --lane-projects: #ffe882;
-  --lane-skills: #9a9290;
-  --lane-certs: #b5aeae;
+  --lane-education-solid: #8d839b; /* palette */
+  --lane-experience-solid: #bf5198; /* palette */
+  --lane-projects-solid: #f02999; /* palette */
+  --lane-skills-solid: #f85466; /* palette */
+  --lane-certs-solid: #ff8b38; /* palette */
 
-  --lane-education-solid: #6e7d88;
-  --lane-experience-solid: #ff473d;
-  --lane-projects-solid: #ffe882;
-  --lane-skills-solid: #8a8080;
-  --lane-certs-solid: #a6a0a0;
+  --highlight: #51173b;
 
-  --highlight: #5a4d22;
+  --canvas-bg: #0f0d13;
+  --canvas-dot: #221d2a;
+  --edge: #3d3549;
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 28px -18px rgba(0, 0, 0, 0.85);
   --shadow-3: 0 2px 8px rgba(0, 0, 0, 0.55), 0 20px 48px -24px rgba(0, 0, 0, 0.95);
-
-  --canvas-bg: #101315;
-  --canvas-dot: #23282d;
-  --edge: #454b52;
 }
 
 /* The JS animations check this too — see prefersReducedMotion() in WorkflowCanvas. */
