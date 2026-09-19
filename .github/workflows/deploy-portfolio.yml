@@ -2,105 +2,87 @@ name: Deploy Portfolio to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
-    paths: [ 'portfolio-app/**' ]
+    branches: [main]
+    paths:
+      - 'portfolio-app/**'
+      - '.github/workflows/deploy-portfolio.yml'
   pull_request:
-    branches: [ main ]
-    paths: [ 'portfolio-app/**' ]
+    branches: [main]
+    paths:
+      - 'portfolio-app/**'
+      - '.github/workflows/deploy-portfolio.yml'
   workflow_dispatch:
 
+# The documented minimum for deploying Pages from Actions.
 permissions:
   contents: read
   pages: write
   id-token: write
-  # Additional permissions for Pages setup
-  actions: read
-  deployments: write
 
+# Let a running deployment finish rather than cancelling it part-way.
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: portfolio-app/package-lock.json
-        
-    - name: Install dependencies
-      run: |
-        cd portfolio-app
-        npm ci
-        
-    - name: Build portfolio
-      run: |
-        cd portfolio-app
-        npm run build
-        
-    - name: List build output
-      run: |
-        echo "Build directory contents:"
-        ls -la portfolio-app/dist/
-        echo "Checking if dist/index.html exists:"
-        test -f portfolio-app/dist/index.html && echo "✅ index.html found" || echo "❌ index.html missing"
-        
-    - name: Setup Pages
-      id: pages
-      uses: actions/configure-pages@v4
-      continue-on-error: true
-      # Pages must be manually enabled in repository settings first
-      
-    - name: Check Pages Configuration
-      run: |
-        if [ "${{ steps.pages.outcome }}" = "failure" ]; then
-          echo "⚠️ Pages setup failed - this is expected if Pages isn't enabled yet"
-          echo "📋 To fix this:"
-          echo "1. Go to repository Settings → Pages"
-          echo "2. Set Source to 'GitHub Actions'"
-          echo "3. Re-run this workflow"
-          echo "4. Repository must be public for free GitHub Pages"
-        else
-          echo "✅ Pages configuration successful"
-        fi
-      
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: './portfolio-app/dist'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: portfolio-app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: portfolio-app
+        run: npm ci
+
+      - name: Build
+        working-directory: portfolio-app
+        run: npm run build
+
+      # Pages serves this repo under /<repo-name>/. If vite's `base` does not
+      # match, every asset 404s and the site loads as a blank page while the
+      # workflow still reports success — which is exactly what happened when the
+      # base was left at '/spec-driven/'. Fail loudly instead.
+      - name: Verify asset paths match the Pages subpath
+        working-directory: portfolio-app
+        run: |
+          set -euo pipefail
+          expected="/${GITHUB_REPOSITORY#*/}/"
+          test -f dist/index.html || { echo "::error::dist/index.html was not produced"; exit 1; }
+          if ! grep -q "\"${expected}assets/" dist/index.html; then
+            echo "::error::dist/index.html does not reference ${expected}assets/ — set base in portfolio-app/vite.config.js to '${expected}'"
+            grep -oE '(src|href)="[^"]*"' dist/index.html || true
+            exit 1
+          fi
+          echo "Asset paths correctly rooted at ${expected}"
+
+      - name: Configure Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: portfolio-app/dist
 
   deploy:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    
     steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
-      continue-on-error: true
-      
-    - name: Deployment Status
-      run: |
-        if [ "${{ steps.deployment.outcome }}" = "success" ]; then
-          echo "🎉 Deployment successful!"
-          echo "🌐 Portfolio available at: ${{ steps.deployment.outputs.page_url }}"
-        else
-          echo "❌ Deployment failed"
-          echo "📋 Ensure GitHub Pages is enabled:"
-          echo "   1. Go to Settings → Pages"
-          echo "   2. Set Source to 'GitHub Actions'"
-          echo "   3. Repository must be public"
-          echo "   4. Re-run this workflow"
-        fi
+      # No continue-on-error here: a failed deployment must fail the workflow,
+      # otherwise a broken site reports as a green run.
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
